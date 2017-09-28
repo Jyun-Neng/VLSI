@@ -2,7 +2,7 @@
 *.vcd
 *.rc
 *.log
-*.config
+*.conf
 INCA_libs
 nWaveLog
 vfastLog

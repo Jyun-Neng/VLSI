@@ -1,8 +1,0 @@
-*.fsdb
-*.vcd
-*.conf
-*.log
-*.rc
-NICA_libs/
-nWaveLog/
-vfastLog/
