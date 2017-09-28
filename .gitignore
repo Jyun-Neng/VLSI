@@ -1,0 +1,8 @@
+*.fsdb
+*.vcd
+*.rc
+*.log
+*.config
+INCA_libs
+nWaveLog
+vfastLog
