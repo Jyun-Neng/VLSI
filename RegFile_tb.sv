@@ -27,7 +27,7 @@ module Regfile_tb;
 
 	integer i;
 
-	RegFile r0(.OUT_1(OUT_1), .OUT_2(OUT_2), .Write(Write), .Read_ADDR_1(Read_ADDR_1), .Read_ADDR_2(Read_ADDR_2), 
+	RegFile r0(.OUT_1(OUT_1), .OUT_2(OUT_2), .RegWrite(Write), .Read_ADDR_1(Read_ADDR_1), .Read_ADDR_2(Read_ADDR_2), 
         .Write_ADDR(Write_ADDR), .DIN(DIN), .clk(clk), .rst(rst));
 	
 	initial clk = 'b1;
