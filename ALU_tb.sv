@@ -14,48 +14,46 @@
 `timescale 1ns/10ps
 
 `include "ALU.sv"
-
-`define ADD 4'b0000
-`define SUB 4'b0001
-`define AND 4'b0010
-`define OR 4'b0011
-`define SLL 4'b0100
-`define ROTATE 4'b0101
+`define ADD 'd0
+`define SUB 'd1
+`define SLL 'd2
+`define SLT 'd3
+`define XOR 'd4
+`define SRL 'd5
+`define OR  'd6
+`define AND 'd7
+`define NDEF 'd8
 `define	DataSize	32
 `define	ALUopSize	4
 
 module ALU_tb;
 
-logic Overflow;
+logic Zero;
 logic [`DataSize-1:0] 	alu_result;
-logic [`ALUopSize-1:0] 	OP;
+logic [`ALUopSize-1:0] 	ALUType;
 logic [`DataSize-1:0] 	src1;
 logic [`DataSize-1:0] 	src2;
-logic enable;
+logic rst;
 
-ALU alu (.Overflow(Overflow) , .alu_result(alu_result) , .src1(src1) , .src2(src2) , .OP(OP) , .enable(enable));
+ALU alu (.Zero(Zero) , .alu_result(alu_result) , .src1(src1) , .src2(src2) , .ALUType(ALUType) , .rst(rst));
 		 
 //monitor
 initial begin
-	$monitor("enable = %b, src1 = %h, src2 = %h, OP = %b, alu_result = %h, Overflow = %b", enable, src1, src2, OP, alu_result, Overflow);
+	$monitor("reset = %b, src1 = %h, src2 = %h, ALUType = %d, alu_result = %h, Zero = %b", rst, src1, src2, ALUType, alu_result, Zero);
 end
 
 initial begin
-    #0 enable = 1'b0; src1 = 32'h0; src2 = 32'h0; OP = 3'b000;
-    #10 enable = 1'b1; src1 = 32'h3; src2 = 32'h9; OP = 3'b000;
-    #10 enable = 1'b1; src1 = 32'hCC; src2 = 32'hAA; OP = 3'b001;
-    #10 enable = 1'b1; src1 = 32'hE; src2 = 32'h7; OP = 3'b010;
-    #10 enable = 1'b1; src1 = 32'h5; src2 = 32'h2; OP = 3'b011;
-    #10 enable = 1'b1; src1 = 32'h1; src2 = 32'h1; OP = 3'b100;
-    #10 enable = 1'b1; src1 = 32'h1; src2 = 32'h1; OP = 3'b101;
-    #10 enable = 1'b1; src1 = 'd21; src2 = 'd46; OP = `ADD;
-    #10 enable = 1'b1; src1 = 'd648; src2 = 'd1035; OP = `SUB;
-    #10 enable = 1'b1; src1 = 'd1034; src2 = 'd3028; OP = `AND;
-    #10 enable = 1'b1; src1 = 'd110; src2 = 'd30548; OP = `OR;
-    #10 enable = 1'b1; src1 = 'd12356; src2 = 'd3; OP = `SLL;
-    #10 enable = 1'b1; src1 = 'd12345678; src2 = 'd4; OP = `ROTATE;
-    
-
+    #10 rst = 1'b1; src1 = 32'h0; src2 = 32'h0; ALUType = `ADD;
+    #10 rst = 1'b0; src1 = 32'h3; src2 = 32'h9; ALUType = `SLT;
+    #10 rst = 1'b0; src1 = 32'hCC; src2 = 32'hAA; ALUType = `SLL;
+    #10 rst = 1'b0; src1 = 32'hE; src2 = 32'h7; ALUType = `SLT;
+    #10 rst = 1'b0; src1 = 32'hfffffff5; src2 = 32'h12; ALUType = `SRL;
+    #10 rst = 1'b0; src1 = 32'h1; src2 = 32'h1; ALUType = `XOR;
+    #10 rst = 1'b0; src1 = 32'h1; src2 = 32'h1; ALUType = `AND;
+    #10 rst = 1'b0; src1 = 'd10; src2 = 'd20; ALUType = `SUB;
+    #10 rst = 1'b0; src1 = 'd30; src2 = 'd20; ALUType = `ADD;
+    #10 rst = 1'b0; src1 = 'd10; src2 = 'd20; ALUType = `NDEF;
+    #10 rst = 1'b0; src1 = 'd10; src2 = 'd20; ALUType = `XOR;
 end
 
 	initial begin // Generate the waveform file
