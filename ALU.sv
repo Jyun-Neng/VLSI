@@ -34,6 +34,9 @@ module ALU(Zero, alu_result, src1, src2, ALUType, rst);
     input rst;
     output logic [DataSize-1:0] alu_result;
     output logic Zero;
+
+    logic [DataSize-1:0] one = 32'hffffffff;
+    
     
     always_comb begin
         if (!rst) begin
@@ -43,7 +46,10 @@ module ALU(Zero, alu_result, src1, src2, ALUType, rst);
                 `AND : alu_result = src1 & src2;
                 `OR : alu_result = src1 | src2;
                 `SLL : alu_result = src1 << (src2 % 32);
-                `SRL : alu_result = src1 >> (src2 % 32);
+                `SRL : begin
+                    if (src1[DataSize-1]) alu_result = {one, src1} >> (src2 % 32);
+                    else alu_result = src1 >> (src2 % 32);
+                end
                 `SLT : alu_result = (src1 < src2) ? 1 : 0;
                 `XOR : begin
                     alu_result <= src1 ^ src2;
