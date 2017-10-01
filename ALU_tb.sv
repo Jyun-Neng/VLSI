@@ -47,7 +47,7 @@ initial begin
     #10 rst = 1'b0; src1 = 32'h3; src2 = 32'h9; ALUType = `SLT;
     #10 rst = 1'b0; src1 = 32'hCC; src2 = 32'hAA; ALUType = `SLL;
     #10 rst = 1'b0; src1 = 32'hE; src2 = 32'h7; ALUType = `SLT;
-    #10 rst = 1'b0; src1 = 32'hfffffff5; src2 = 32'h12; ALUType = `SRL;
+    #10 rst = 1'b0; src1 = 32'hfffffff5; src2 = 32'h81; ALUType = `SRL;
     #10 rst = 1'b0; src1 = 32'h1; src2 = 32'h1; ALUType = `XOR;
     #10 rst = 1'b0; src1 = 32'h1; src2 = 32'h1; ALUType = `AND;
     #10 rst = 1'b0; src1 = 'd10; src2 = 'd20; ALUType = `SUB;
