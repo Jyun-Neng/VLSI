@@ -25,7 +25,7 @@
 `define AND 'd7
 `define NDEF 'd8
 
-module ALU(Zero, alu_result, src1, src2, ALUType, rst);
+module ALU(Overflow, Zero, alu_result, src1, src2, ALUType, rst);
     parameter DataSize = 32;
     parameter ALUopSize = 4;
        
@@ -33,16 +33,25 @@ module ALU(Zero, alu_result, src1, src2, ALUType, rst);
     input [ALUopSize-1:0] ALUType;
     input rst;
     output logic [DataSize-1:0] alu_result;
-    output logic Zero;
+    output logic Zero, Overflow;
 
     logic [DataSize-1:0] one = 32'hffffffff;
-    
     
     always_comb begin
         if (!rst) begin
             case (ALUType)
-                `ADD : alu_result <= src1 + src2;
-                `SUB : alu_result <= src1 - src2;
+                `ADD : begin 
+                    alu_result <= src1 + src2;
+                    if ((alu_result[31]==0 && src1[31]==1 && src2[31]==1)||(alu_result[31]==1 && src1[31]==0 && src2[31]==0))
+                          Overflow <= 1;
+                    else Overflow <= 0;
+                end 
+                `SUB : begin  
+                    alu_result <= src1 - src2;
+                    if ((alu_result[31]==0 && src1[31]==1 && src2[31]==0)||(alu_result[31]==1 && src1[31]==0 && src2[31]==1))
+                          Overflow <= 1;
+                    else Overflow <= 0;
+                end 
                 `AND : alu_result <= src1 & src2;
                 `OR : alu_result <= src1 | src2;
                 `SLL : alu_result <= src1 << (src2 % 32);
@@ -59,6 +68,7 @@ module ALU(Zero, alu_result, src1, src2, ALUType, rst);
                 default : begin
                     alu_result <= 0;
                     Zero <= 0;
+                    Overflow <= 0;
                 end
             endcase
         end
