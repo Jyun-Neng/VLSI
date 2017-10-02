@@ -26,7 +26,7 @@
     *           
     * Creation Date : 2017/09/30
     *
-    * Last Modified : 2017/09/30
+    * Last Modified : 2017/10/01
     *
     * Create By : Jyun-Neng Ji
     *
@@ -41,6 +41,7 @@
 `define ITYPE_LW 'b0000011
 
 module control(
+    input rst,
     input [6:0]OP,
     output logic DM_write, DM_en, RegWrite, branch, jump, ALUSrc,
     output logic [1:0] MemtoReg, ALUOp,
@@ -48,29 +49,36 @@ module control(
 );
 
     always_comb begin
-        case (OP)
-            `RTYPE : begin
-                DM_en <= 'b0; branch <= 'b0; jump <= 'b0; ALUSrc <= 'b0; MemtoReg <= 'b1; RegWrite <= 'b01; ALUOp <= 'b00;
-            end
-            `ITYPE : begin 
-                DM_en <= 'b0; branch <= 'b0; jump <= 'b0; ALUSrc <= 'b1; MemtoReg <= 'b1; RegWrite <= 'b01; ALUOp <= 'b00; ExtenSel <= 'b000;
-            end
-            `ITYPE_LW : begin
-                DM_en <= 'b1; DM_write <= 'b0; branch <= 'b0; jump <= 'b0; ALUSrc <= 'b1; MemtoReg <= 'b00; RegWrite <= 'b1; ALUOp <= 'b01; ExtenSel <= 'b000;
-            end
-            `STYPE : begin
-                DM_en <= 'b1; DM_write <= 'b1; branch <= 'b0; jump <= 'b0; ALUSrc <= 'b1; RegWrite <= 'b0; ALUOp <= 'b01; ExtenSel <= 'b001;
-            end
-            `BTYPE : begin
-                DM_en <= 'b0; branch <= 'b1; jump <= 'b0; ALUSrc <= 'b0; RegWrite <= 'b0; ALUOp <= 'b10; ExtenSel <= 'b010;
-            end
-            `UTYPE : begin
+        if (!rst) begin 
+            case (OP)
+                `RTYPE : begin
+                    DM_en <= 'b0; branch <= 'b0; jump <= 'b0; ALUSrc <= 'b0; MemtoReg <= 'b1; RegWrite <= 'b01; ALUOp <= 'b00;
+                end
+                `ITYPE : begin 
+                    DM_en <= 'b0; branch <= 'b0; jump <= 'b0; ALUSrc <= 'b1; MemtoReg <= 'b1; RegWrite <= 'b01; ALUOp <= 'b00; ExtenSel <= 'b000;
+                end
+                `ITYPE_LW : begin
+                    DM_en <= 'b1; DM_write <= 'b0; branch <= 'b0; jump <= 'b0; ALUSrc <= 'b1; MemtoReg <= 'b00; RegWrite <= 'b1; ALUOp <= 'b01; ExtenSel <= 'b000;
+                end
+                `STYPE : begin
+                    DM_en <= 'b1; DM_write <= 'b1; branch <= 'b0; jump <= 'b0; ALUSrc <= 'b1; RegWrite <= 'b0; ALUOp <= 'b01; ExtenSel <= 'b001;
+                end
+                `BTYPE : begin
+                    DM_en <= 'b0; branch <= 'b1; jump <= 'b0; ALUSrc <= 'b0; RegWrite <= 'b0; ALUOp <= 'b10; ExtenSel <= 'b010;
+                end
+                `UTYPE : begin
                 DM_en <= 'b0; branch <= 'b0; jump <= 'b0; MemtoReg <= 'b10; RegWrite <= 'b1; ExtenSel <= 'b011;
-            end
-            `JTYPE : begin
+                end
+                `JTYPE : begin
                 DM_en <= 'b0; branch <= 'b0; jump <= 'b1; MemtoReg <= 'b11; RegWrite <= 'b1;  ExtenSel <= 'b100;
-            end
-        endcase
-    end
-    
-    endmodule
+                end
+                default : begin 
+                    DM_en <= 'b0; branch <= 'b0; jump <= 'b0; RegWrite <= 'b0;
+                end
+            endcase
+        end
+        else begin
+            DM_en <= 0; RegWrite <= 0; jump = 0; branch = 0;
+        end
+    end 
+endmodule
