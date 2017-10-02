@@ -9,7 +9,7 @@
     *
     * Creation Date : 2017/09/27
     *
-    * Last Modified : 2017/10/01
+    * Last Modified : 2017/10/02
     *
     * Create By : Jyun-Neng Ji
     *
@@ -41,24 +41,24 @@ module ALU(Zero, alu_result, src1, src2, ALUType, rst);
     always_comb begin
         if (!rst) begin
             case (ALUType)
-                `ADD : alu_result = src1 + src2;
-                `SUB : alu_result = src1 - src2;
-                `AND : alu_result = src1 & src2;
-                `OR : alu_result = src1 | src2;
-                `SLL : alu_result = src1 << (src2 % 32);
+                `ADD : alu_result <= src1 + src2;
+                `SUB : alu_result <= src1 - src2;
+                `AND : alu_result <= src1 & src2;
+                `OR : alu_result <= src1 | src2;
+                `SLL : alu_result <= src1 << (src2 % 32);
                 `SRL : begin
-                    if (src1[DataSize-1]) alu_result = {one, src1} >> (src2 % 32);
-                    else alu_result = src1 >> (src2 % 32);
+                    if (src1[DataSize-1]) alu_result <= {one, src1} >> (src2 % 32);
+                    else alu_result <= src1 >> (src2 % 32);
                 end
-                `SLT : alu_result = (src1 < src2) ? 1 : 0;
+                `SLT : alu_result <= (src1 < src2) ? 1 : 0;
                 `XOR : begin
                     alu_result <= src1 ^ src2;
                     if (src1 == src2) Zero <= 1;
                     else Zero <= 0;
                 end
                 default : begin
-                    alu_result = 0;
-                    Zero = 0;
+                    alu_result <= 0;
+                    Zero <= 0;
                 end
             endcase
         end
