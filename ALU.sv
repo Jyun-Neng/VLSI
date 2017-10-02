@@ -39,6 +39,9 @@ module ALU(Overflow, Zero, alu_result, src1, src2, ALUType, rst);
     
     always_comb begin
         if (!rst) begin
+
+            CHECK_OVERFLOW: assert (!Overflow) else $display ("Overflow!");
+            
             case (ALUType)
                 `ADD : begin 
                     alu_result <= src1 + src2;
@@ -52,16 +55,37 @@ module ALU(Overflow, Zero, alu_result, src1, src2, ALUType, rst);
                           Overflow <= 1;
                     else Overflow <= 0;
                 end 
-                `AND : alu_result <= src1 & src2;
-                `OR : alu_result <= src1 | src2;
-                `SLL : alu_result <= src1 << (src2 % 32);
+                `AND : begin
+                    alu_result <= src1 & src2;
+                    Overflow <= 0;
+                end 
+                `OR : begin  
+                    alu_result <= src1 | src2;
+                    Overflow <= 0;
+                end 
+                `SLL : begin 
+                    alu_result <= src1 << (src2 % 32);
+                    Overflow <= 0;
+                end
                 `SRL : begin
                     if (src1[DataSize-1]) alu_result <= {one, src1} >> (src2 % 32);
                     else alu_result <= src1 >> (src2 % 32);
+                    Overflow <= 0;
                 end
-                `SLT : alu_result <= (src1 < src2) ? 1 : 0;
+                `SLT : begin
+                    Overflow <= 0;
+                    if (src1[31] == src2[31]) begin
+                        if (src1[31])
+                            alu_result <= (src1 < src2) ? 0 : 1;
+                        else
+                            alu_result <= (src1 < src2) ? 1 : 0;
+                    end
+                    else 
+                        alu_result <= (src1[31] < src2[31]) ? 0 : 1;
+                end 
                 `XOR : begin
                     alu_result <= src1 ^ src2;
+                    Overflow <= 0;
                     if (src1 == src2) Zero <= 1;
                     else Zero <= 0;
                 end
