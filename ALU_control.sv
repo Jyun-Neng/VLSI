@@ -5,7 +5,7 @@
     *           
     * Creation Date : 2017/09/30
     *
-    * Last Modified : 2017/09/30
+    * Last Modified : 2017/10/02
     *
     * Create By : Jyun-Neng Ji
     *
@@ -32,7 +32,7 @@ module ALU_control(
         case (funct7)
             'b0000000 : _funct = `ADD;
             'b0100000 : _funct = `SUB;
-            default : _funct = `NDEF;
+            default : _funct = `ADD;
         endcase
     end
 
