@@ -8,7 +8,7 @@
     *           
     * Creation Date : 2017/09/28
     *
-    * Last Modified : 2017/09/28
+    * Last Modified : 2017/10/01
     *
     * Create By : Jyun-Neng Ji
     *
@@ -29,12 +29,15 @@ module DM(clk, rst, DM_enable, DM_write, DM_address, DM_in, DM_out);
 
     integer i;
     
-    always_ff @(posedge clk) begin
+    always_ff @(negedge clk) begin
         if (rst) 
-            for (i=0; i<DMSize; i=i+1) mem_data[i] <= 0;
+            for (i=0; i<DMSize; i=i+1)  
+                mem_data[i] <= 0;
         else begin
-            if (DM_write) mem_data[DM_address] <= DM_in;   // write data
-            else  DM_out <= mem_data[DM_address];  // read data
+            if (DM_enable) begin
+                if (DM_write) mem_data[DM_address] <= DM_in;   // write data
+                else  DM_out <= mem_data[DM_address];  // read data
+            end 
         end
     end
-endmodule
+    endmodule

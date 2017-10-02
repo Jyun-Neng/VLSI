@@ -8,14 +8,14 @@
     *           
     * Creation Date : 2017/09/29
     *
-    * Last Modified : 2017/09/29
+    * Last Modified : 2017/10/01
     *
     * Create By : Jyun-Neng Ji
     *
 */
 
 
-module DM(clk, rst, IM_enable, IM_write, IM_address, IM_in, IM_out);
+module IM(clk, rst, IM_enable, IM_write, IM_address, IM_in, IM_out);
     parameter ADSize = 16;
     parameter DASize = 32;
     parameter IMSize = 17'h10000;
@@ -29,11 +29,12 @@ module DM(clk, rst, IM_enable, IM_write, IM_address, IM_in, IM_out);
 
     integer i;
     
-    always_ff @(posedge clk) begin
-        if (rst) 
-            for (i=0; i<IMSize; i=i+1) mem_data[i] <= 0;
+    always_ff @(negedge clk) begin
+        if (rst)   
+            for (i=0; i<IMSize; i=i+1)  
+                mem_data[i] <= 0;
         else begin
-            if (IM_write) mem_data[IM_address] <= DM_in;   // write data
+            if (IM_write) mem_data[IM_address] <= IM_in;   // write data
             else  IM_out <= mem_data[IM_address];  // read data
         end
     end
