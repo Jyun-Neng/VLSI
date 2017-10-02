@@ -33,9 +33,9 @@ logic [`DataSize-1:0] 	alu_result;
 logic [`ALUopSize-1:0] 	ALUType;
 logic [`DataSize-1:0] 	src1;
 logic [`DataSize-1:0] 	src2;
-logic rst;
+logic rst, Overflow;
 
-ALU alu (.Zero(Zero) , .alu_result(alu_result) , .src1(src1) , .src2(src2) , .ALUType(ALUType) , .rst(rst));
+ALU alu (.Overflow(Overflow), .Zero(Zero) , .alu_result(alu_result) , .src1(src1) , .src2(src2) , .ALUType(ALUType) , .rst(rst));
 		 
 //monitor
 initial begin
@@ -54,6 +54,7 @@ initial begin
     #10 rst = 1'b0; src1 = 'd30; src2 = 'd20; ALUType = `ADD;
     #10 rst = 1'b0; src1 = 'd10; src2 = 'd20; ALUType = `NDEF;
     #10 rst = 1'b0; src1 = 'd10; src2 = 'd20; ALUType = `XOR;
+    #10 src1 = -7; src2 = 0; ALUType = `SLT;
 end
 
 	initial begin // Generate the waveform file
