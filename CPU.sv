@@ -105,13 +105,16 @@ module CPU(
 
     ALU_control AC1 (.funct7(EXE_funct7), .funct3(EXE_funct3), .ALUOp(EXE_ALUOp), .ALUType(ALUType));
 
-    ALU A1 (.Zero(EXE_Zero), .alu_result(EXE_alu_result), .src1(EXE_OUT_1), .src2(src2), .ALUType(ALUType), .rst(rst));
+    ALU A1 (.Overflow(Overflow), .Zero(EXE_Zero), .alu_result(EXE_alu_result), .src1(EXE_OUT_1), .src2(src2), .ALUType(ALUType), .rst(rst));
 
     always_ff @(posedge clk) begin
         if (rst) begin
             MEM_DM_en <= 0; MEM_jump <= 0; MEM_branch <= 0; MEM_RegWrite <= 0;
         end
-        else begin 
+        else begin
+
+            CHECK_OVERFLOW: assert (!Overflow) else $display ("Overflow!");
+
             // control
             MEM_branch <= EXE_branch;
             MEM_jump <= EXE_jump;
