@@ -5,7 +5,7 @@
     *           
     * Creation Date : 2017/10/01
     *
-    * Last Modified : 2017/10/01
+    * Last Modified : 2017/10/02
     *
     * Create By : Jyun-Neng Ji
     *
@@ -37,7 +37,7 @@ module CPU(
           MEM_branch, MEM_jump, MEM_DM_write, MEM_DM_en, MEM_RegWrite, MEM_Zero,
           WB_RegWrite;
 
-    wire [31:0] PC4, next_PC, ID_imm_out, ID_OUT_1, ID_OUT_2, src1, src2, EXE_I0, EXE_I1, EXE_alu_result, WB_DIN;
+    wire [31:0] PC4, next_PC, ID_imm_out, ID_OUT_1, ID_OUT_2, src2, EXE_alu_result, WB_DIN;
     wire [6:0] OP;
     wire [4:0] ID_Read_ADDR_1, ID_Read_ADDR_2;
     wire [24:0] ID_imm_in;
