@@ -29,11 +29,11 @@ module RegFile(OUT_1, OUT_2, RegWrite, Read_ADDR_1, Read_ADDR_2, Write_ADDR, DIN
     logic [DASize-1:0] mem [REGSize-1:0];
     integer i;
 
-    always_ff @(posedge clk, posedge rst) begin
+    always_ff @(negedge clk, posedge rst) begin
         if (rst)    // reset register file
             for (i = 0; i < REGSize; i = i + 1) mem[i] <= 'd0;
         else begin
-            CHEK_WRITE_ADDR: assert (!(RegWrite && (Write_ADDR == 0))) else $display ("Cannot write data to register x0."); // assertion
+            CHEK_WRITE_ADDR: assert (!(RegWrite && (Write_ADDR == 0) && (DIN != 'd0))) else $display ("Cannot write data to register x0."); // assertion
             if (RegWrite) 
                 if (Write_ADDR != 0 ) mem[Write_ADDR] <= DIN;  // write enable
             OUT_1 <= mem[Read_ADDR_1];
