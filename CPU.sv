@@ -112,9 +112,6 @@ module CPU(
             MEM_DM_en <= 0; MEM_jump <= 0; MEM_branch <= 0; MEM_RegWrite <= 0;
         end
         else begin
-
-            CHECK_OVERFLOW: assert (!Overflow) else $display ("Overflow!");
-
             // control
             MEM_branch <= EXE_branch;
             MEM_jump <= EXE_jump;
